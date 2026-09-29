@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MONEY TIPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--green:#00a651;--green-light:#e8f8ef;--bg:#f4f6f8;--card:#fff;--text:#1a1a1a;--muted:#6b7280;--border:#e5e7eb;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input{font-family:inherit}
+
+/* AUTH */
+.auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(160deg,#0b3d2e 0%,#00a651 50%,#e8f8ef 100%)}
+.auth-card{background:#fff;border-radius:20px;padding:32px 28px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.auth-logo{text-align:center;margin-bottom:28px}
+.auth-logo h1{font-size:1.6rem;font-weight:800;color:var(--green);letter-spacing:-0.5px}
+.auth-logo p{font-size:.85rem;color:var(--muted);margin-top:4px}
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.auth-tabs button{flex:1;padding:12px;font-weight:600;font-size:.9rem;color:var(--muted);background:#fff;transition:all .15s}
+.auth-tabs button.active{background:var(--green);color:#fff}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+.form-group input{width:100%;padding:13px 14px;border:1px solid var(--border);border-radius:10px;font-size:.95rem;transition:border .15s}
+.form-group input:focus{outline:none;border-color:var(--green)}
+.auth-btn{width:100%;padding:14px;background:var(--green);color:#fff;border-radius:12px;font-weight:700;font-size:.95rem;margin-top:8px;transition:background .15s}
+.auth-btn:hover{background:#008c44}
+.auth-btn:disabled{opacity:.6;cursor:not-allowed}
+.auth-error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 14px;border-radius:10px;font-size:.82rem;margin-bottom:14px;display:none}
+.auth-success{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;padding:10px 14px;border-radius:10px;font-size:.82rem;margin-bottom:14px;display:none}
+.auth-footer{text-align:center;margin-top:18px;font-size:.8rem;color:var(--muted)}
+.auth-footer a{color:var(--green);font-weight:600;cursor:pointer}
+
+/* APP */
+.topbar{background:var(--green);color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar .brand{font-weight:800;font-size:1.15rem;display:flex;align-items:center;gap:8px}
+.topbar .brand span{background:#fff;color:var(--green);font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:4px}
+.user-chip{background:rgba(255,255,255,.2);border-radius:20px;padding:5px 12px;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer}
+.vip-dot{width:7px;height:7px;background:#fff;border-radius:50%}
+.tabs-nav{background:#fff;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;position:sticky;top:44px;z-index:40}
+.tabs-nav button{flex:1;min-width:70px;padding:12px 6px;font-size:.78rem;font-weight:600;color:var(--muted);border-bottom:2px solid transparent}
+.tabs-nav button.active{color:var(--green);border-bottom-color:var(--green)}
+.content{padding:12px;max-width:520px;margin:0 auto;padding-bottom:80px}
+.full-view{display:none}.full-view.active{display:block}
+.quota-alert{background:var(--green-light);border:1px solid #b2e5c7;border-radius:10px;padding:10px 14px;font-size:.82rem;margin-bottom:12px}
+.api-note{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:10px 14px;font-size:.78rem;margin-bottom:12px;color:#1e40af}
+.league-block{margin-bottom:16px}
+.league-header{display:flex;align-items:center;gap:8px;padding:8px 4px;font-size:.82rem;font-weight:700}
+.match-row{background:var(--card);border-radius:12px;margin-bottom:6px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer;border:1px solid transparent}
+.match-row:hover{border-color:var(--green)}
+.match-time{min-width:52px;text-align:center}
+.match-time .hour{font-weight:700;font-size:.85rem}
+.match-time .status{font-size:.62rem;color:var(--muted)}
+.match-teams{flex:1}
+.match-teams .team{font-size:.88rem;font-weight:500;padding:2px 0}
+.match-meta{font-size:.7rem;color:var(--muted)}
+.score{font-weight:700;font-size:.95rem;min-width:40px;text-align:center}
+.metric-selector,.filter-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.metric-chip,.filter-chip{padding:6px 12px;border-radius:20px;font-size:.75rem;font-weight:600;border:1px solid var(--border);color:var(--muted);background:#fff}
+.metric-chip.active,.filter-chip.active{background:var(--green);color:#fff;border-color:var(--green)}
+.team-select-row{display:flex;gap:8px;margin-bottom:14px}
+.team-select-row select{flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--border);font-size:.85rem;font-weight:600;font-family:inherit;background:#fff}
+.line-input{display:flex;align-items:center;gap:8px;margin-bottom:12px;background:var(--bg);border-radius:10px;padding:10px 12px}
+.line-input label{font-size:.78rem;font-weight:600;color:var(--muted)}
+.line-input input{width:60px;border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:.9rem;font-weight:700;text-align:center}
+.line-summary{display:flex;gap:8px;margin-bottom:14px}
+.line-stat{flex:1;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.line-stat .n{font-size:1.25rem;font-weight:800}
+.line-stat .l{font-size:.65rem;color:var(--muted);margin-top:2px}
+.line-stat.over .n{color:var(--green)}.line-stat.under .n{color:var(--red)}.line-stat.avg .n{color:var(--blue)}
+.last10-table{width:100%;border-collapse:collapse;font-size:.8rem;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.last10-table th{text-align:left;padding:8px 6px;font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;background:var(--bg);border-bottom:1px solid var(--border)}
+.last10-table td{padding:9px 6px;border-bottom:1px solid #f3f4f6}
+.last10-table .val{font-weight:700;text-align:center}
+.last10-table .val.over{color:var(--green)}.last10-table .val.under{color:var(--red)}
+.loading{text-align:center;padding:30px;color:var(--muted);font-size:.9rem}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;z-index:50;max-width:520px;margin:0 auto}
+.bottom-nav button{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.62rem;font-weight:600;color:var(--muted)}
+.bottom-nav button.active{color:var(--green)}
+.bottom-nav .icon{font-size:1.15rem}
+.plan-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;position:relative}
+.plan-card.current{border-color:var(--green);box-shadow:0 0 0 2px rgba(0,166,81,.15)}
+.plan-card .name{font-weight:800;font-size:1.15rem}
+.plan-card .price{font-size:1.6rem;font-weight:800;margin:8px 0 4px;color:var(--green)}
+.plan-card .price span{font-size:.8rem;color:var(--muted);font-weight:500}
+.plan-card ul{list-style:none;margin:12px 0}
+.plan-card li{font-size:.85rem;padding:4px 0}
+.plan-card li::before{content:'✓ ';color:var(--green);font-weight:700}
+.btn-green{width:100%;padding:12px;background:var(--green);color:#fff;border-radius:10px;font-weight:700;font-size:.9rem}
+.btn-outline{width:100%;padding:12px;background:transparent;color:var(--text);border:1px solid var(--border);border-radius:10px;font-weight:600;font-size:.9rem}
+.badge-current{position:absolute;top:12px;right:12px;background:var(--green-light);color:var(--green);font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:10px}
+.admin-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.admin-stat{background:#fff;border-radius:10px;padding:12px 8px;text-align:center;border:1px solid var(--border)}
+.admin-stat .n{font-size:1.3rem;font-weight:800;color:var(--green)}
+.admin-stat .l{font-size:.68rem;color:var(--muted)}
+.admin-table{width:100%;border-collapse:collapse;font-size:.78rem;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.admin-table th{background:var(--bg);padding:10px 8px;text-align:left;font-size:.65rem;color:var(--muted);text-transform:uppercase}
+.admin-table td{padding:10px 8px;border-top:1px solid var(--border)}
+.tag{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:8px}
+.tag-vip{background:var(--green-light);color:var(--green)}
+.tag-free{background:#f3f4f6;color:var(--muted)}
+.tag-ok{background:#dcfce7;color:#166534}
+.tag-off{background:#fee2e2;color:#991b1b}
+.act-btn{font-size:.7rem;padding:3px 8px;border-radius:6px;background:var(--bg);color:var(--muted);font-weight:600;margin-right:3px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;width:100%;max-width:520px;max-height:90vh;border-radius:18px 18px 0 0;overflow:hidden;display:flex;flex-direction:column}
+.modal-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.modal-body{padding:16px;overflow-y:auto;flex:1}
+.pick-card{background:var(--green-light);border:1px solid #b2e5c7;border-radius:12px;padding:14px;margin-bottom:12px}
+.pick-card .main{font-size:1.05rem;font-weight:700;margin:4px 0}
+.comp-tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:4px}
+.comp-tab{padding:7px 14px;border-radius:20px;font-size:.75rem;font-weight:600;border:1px solid var(--border);color:var(--muted);background:#fff;white-space:nowrap}
+.comp-tab.active{background:var(--green);color:#fff;border-color:var(--green)}
+.logout-btn{font-size:.75rem;color:var(--red);font-weight:600;margin-left:8px;padding:4px 8px}
+#app{display:none}
+</style>
+</head>
+<body>
+
+<!-- ========== AUTH SCREEN ========== -->
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <h1>MONEY TIPS</h1>
+      <p>Análises com critério. Dados oficiais.</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="active" id="tabLogin" onclick="switchAuth('login')">Entrar</button>
+      <button id="tabRegister" onclick="switchAuth('register')">Cadastrar</button>
+    </div>
+    <div class="auth-error" id="authError"></div>
+    <div class="auth-success" id="authSuccess"></div>
+    <form id="authForm" onsubmit="return handleAuth(event)">
+      <div class="form-group" id="nameGroup" style="display:none">
+        <label>Nome</label>
+        <input type="text" id="authName" placeholder="Seu nome" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="authEmail" placeholder="seu@email.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="authPass" placeholder="••••••••" required minlength="4" autocomplete="current-password">
+      </div>
+      <button type="submit" class="auth-btn" id="authSubmit">Entrar</button>
+    </form>
+    <div class="auth-footer">
+      <span id="authSwitchText">Não tem conta?</span>
+      <a id="authSwitchLink" onclick="switchAuth('register')">Cadastre-se</a>
+    </div>
+    <button type="button" class="auth-btn" style="margin-top:14px;background:#1a1a1a;font-size:.85rem" onclick="quickAdminLogin()">Entrar como Admin (dj)</button>
+  </div>
+</div>
+
+<!-- ========== APP ========== -->
+<div id="app">
+<div class="topbar">
+  <div class="brand">MONEY TIPS <span id="planBadge">VIP</span></div>
+  <div class="user-chip" onclick="toggleUserMenu()">
+    <div class="vip-dot"></div>
+    <span id="userName">dj</span>
+    <button class="logout-btn" onclick="event.stopPropagation();logout()">Sair</button>
+  </div>
+</div>
+<div class="tabs-nav" id="mainTabs">
+  <button class="active" data-tab="jogos">Jogos</button>
+  <button data-tab="avancado">Stats Avançadas</button>
+  <button data-tab="planos">Planos</button>
+  <button data-tab="admin" id="adminTabBtn">Admin</button>
+</div>
+
+<div class="full-view active" id="view-jogos">
+  <div class="content">
+    <div class="quota-alert" id="quotaAlert">⚡ Conta VIP · dados atuais via servidor</div>
+    <div class="api-note">📡 API: football-data.org · Ligas free: BSA, PL, PD, SA, BL1, CL</div>
+    <div class="comp-tabs" id="compTabs">
+      <button class="comp-tab active" data-code="BSA">🇧🇷 Série A</button>
+      <button class="comp-tab" data-code="PL">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier</button>
+      <button class="comp-tab" data-code="PD">🇪🇸 La Liga</button>
+      <button class="comp-tab" data-code="SA">🇮🇹 Serie A</button>
+      <button class="comp-tab" data-code="BL1">🇩🇪 Bundesliga</button>
+      <button class="comp-tab" data-code="CL">🏆 Champions</button>
+    </div>
+    <div id="gamesList"><div class="loading">Carregando jogos oficiais...</div></div>
+  </div>
+</div>
+
+<div class="full-view" id="view-avancado">
+  <div class="content">
+    <h2 style="font-size:1.25rem;font-weight:800;margin-bottom:4px">Stats Avançadas</h2>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:12px">Histórico oficial atual · linha Over/Under</p>
+    <div class="api-note">Dados reais via football-data.org</div>
+    <div class="team-select-row">
+      <select id="advTeam">
+        <optgroup label="Brasileirão">
+          <option value="1769">SE Palmeiras</option>
+          <option value="1776">São Paulo FC</option>
+          <option value="1779">Corinthians</option>
+          <option value="1765">Fluminense</option>
+          <option value="1770">Botafogo</option>
+          <option value="1766">Atlético-MG</option>
+          <option value="1767">Grêmio</option>
+          <option value="1777">Bahia</option>
+          <option value="1780">Vasco</option>
+          <option value="1771">Cruzeiro</option>
+        </optgroup>
+        <optgroup label="Premier League">
+          <option value="64">Liverpool</option>
+          <option value="65">Manchester City</option>
+          <option value="57">Arsenal</option>
+          <option value="66">Manchester United</option>
+          <option value="61">Chelsea</option>
+          <option value="58">Aston Villa</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="metric-selector" id="metricSelector">
+      <button class="metric-chip active" data-m="goals">⚽ Gols marcados</button>
+      <button class="metric-chip" data-m="goals_against">🥅 Gols sofridos</button>
+      <button class="metric-chip" data-m="result">📊 Vitórias</button>
+    </div>
+    <div class="filter-row">
+      <button class="filter-chip active" data-f="all">Todos</button>
+      <button class="filter-chip" data-f="H">🏠 Casa</button>
+      <button class="filter-chip" data-f="A">✈️ Fora</button>
+    </div>
+    <div class="line-input">
+      <label>Linha:</label>
+      <input type="number" id="lineValue" value="1.5" step="0.5" min="0">
+      <span style="font-size:.75rem;color:var(--muted)">Over / Under</span>
+    </div>
+    <div class="line-summary" id="lineSummary"></div>
+    <div id="advTable"><div class="loading">Escolha um time...</div></div>
+  </div>
+</div>
+
+<div class="full-view" id="view-planos">
+  <div class="content">
+    <h2 style="font-size:1.25rem;font-weight:800;margin-bottom:12px">Planos</h2>
+    <div class="plan-card" id="cardFree">
+      <div class="name">Free</div>
+      <div class="price">R$ 0 <span>/mês</span></div>
+      <ul><li>1–2 análises/dia</li><li>Palpite principal</li></ul>
+      <button class="btn-outline" id="btnSimFree">Simular Free</button>
+    </div>
+    <div class="plan-card current" id="cardVip">
+      <span class="badge-current">SEU PLANO</span>
+      <div class="name">VIP</div>
+      <div class="price">R$ 49 <span>/mês</span></div>
+      <ul>
+        <li>Todas as análises</li>
+        <li>Stats oficiais atuais</li>
+        <li>Histórico real dos times</li>
+        <li>Linha Over/Under</li>
+      </ul>
+      <button class="btn-green" disabled>Ativo</button>
+    </div>
+  </div>
+</div>
+
+<div class="full-view" id="view-admin">
+  <div class="content">
+    <h2 style="font-size:1.25rem;font-weight:800;margin-bottom:12px">Admin</h2>
+    <div class="admin-stat-row">
+      <div class="admin-stat"><div class="n" id="sTotal">12</div><div class="l">Total</div></div>
+      <div class="admin-stat"><div class="n" id="sVip">7</div><div class="l">VIP</div></div>
+      <div class="admin-stat"><div class="n" id="sFree">5</div><div class="l">Free</div></div>
+      <div class="admin-stat"><div class="n" id="sMrr">R$343</div><div class="l">MRR</div></div>
+    </div>
+    <table class="admin-table">
+      <thead><tr><th>Usuário</th><th>Plano</th><th>Status</th><th>Ações</th></tr></thead>
+      <tbody id="adminBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header"><span id="modalTitle">Análise</span><button onclick="closeModal()" style="font-size:1.2rem;color:var(--muted)">✕</button></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <button class="active" onclick="showMain('jogos')"><span class="icon">⚽</span>Jogos</button>
+  <button onclick="showMain('avancado')"><span class="icon">📊</span>Stats</button>
+  <button onclick="showMain('planos')"><span class="icon">💎</span>Planos</button>
+  <button onclick="showMain('admin')" id="bottomAdmin"><span class="icon">⚙️</span>Admin</button>
+</div>
+</div><!-- /app -->
+
+<script>
+const API = '';
+
+// ===== AUTH (servidor) =====
+let currentSession = null;
+function getSession(){ return currentSession; }
+function setSession(user){ currentSession = user; }
+function clearSession(){ currentSession = null; }
+async function authFetch(url, options={}){
+  const r = await fetch(url, {credentials:'same-origin', ...options, headers:{'Content-Type':'application/json', ...(options.headers||{})}});
+  let data=null; try { data=await r.json(); } catch(e) {}
+  if(!r.ok) throw new Error(data?.error || 'Erro no servidor');
+  return data;
+}
+
+let authMode = 'login';
+
+function switchAuth(mode){
+  authMode = mode;
+  document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', mode === 'register');
+  document.getElementById('nameGroup').style.display = mode === 'register' ? 'block' : 'none';
+  document.getElementById('authSubmit').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
+  document.getElementById('authSwitchText').textContent = mode === 'login' ? 'Não tem conta?' : 'Já tem conta?';
+  document.getElementById('authSwitchLink').textContent = mode === 'login' ? 'Cadastre-se' : 'Entrar';
+  document.getElementById('authSwitchLink').onclick = () => switchAuth(mode === 'login' ? 'register' : 'login');
+  document.getElementById('authError').style.display = 'none';
+  document.getElementById('authSuccess').style.display = 'none';
+}
+
+function showAuthError(msg){
+  const el = document.getElementById('authError');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('authSuccess').style.display = 'none';
+}
+function showAuthSuccess(msg){
+  const el = document.getElementById('authSuccess');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('authError').style.display = 'none';
+}
+
+async function handleAuth(e){
+  e.preventDefault();
+  const email = document.getElementById('authEmail').value.trim().toLowerCase();
+  const pass = document.getElementById('authPass').value;
+  const name = document.getElementById('authName').value.trim();
+  try {
+    const data = await authFetch(authMode === 'register' ? '/api/auth/register' : '/api/auth/login', {
+      method:'POST', body:JSON.stringify(authMode === 'register' ? {name,email,pass} : {email,pass})
+    });
+    setSession(data.user);
+    showAuthSuccess(authMode === 'register' ? 'Conta criada! Entrando...' : 'Login realizado.');
+    setTimeout(enterApp, 250);
+  } catch(err){ showAuthError(err.message); }
+  return false;
+}
+
+function quickAdminLogin(){
+  switchAuth('login');
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPass').value = '';
+  document.getElementById('authEmail').focus();
+  showAuthSuccess('Entre com a conta de administrador configurada no servidor.');
+}
+
+function enterApp(){
+  const session = getSession();
+  if(!session) return;
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('userName').textContent = session.name;
+  document.getElementById('planBadge').textContent = (session.plan || 'free').toUpperCase();
+  // admin tab
+  const showAdmin = !!session.isAdmin;
+  document.getElementById('adminTabBtn').style.display = showAdmin ? '' : 'none';
+  document.getElementById('bottomAdmin').style.display = showAdmin ? '' : 'none';
+  // quota
+  if(session.plan === 'vip'){
+    document.getElementById('quotaAlert').innerHTML = '⚡ Conta VIP · dados atuais via servidor';
+  } else {
+    document.getElementById('quotaAlert').innerHTML = '🔒 Plano Free — 1–2 análises/dia. Faça upgrade em Planos.';
+  }
+  renderAdmin();
+  renderGames();
+}
+
+async function logout(){
+  try { await authFetch('/api/auth/logout', {method:'POST', body:'{}'}); } catch(e) {}
+  clearSession();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'flex';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPass').value = '';
+  document.getElementById('authName').value = '';
+  switchAuth('login');
+}
+
+function toggleUserMenu(){}
+
+// ===== APP STATE =====
+const state = {
+  plan: 'vip',
+  subs: []
+};
+
+// auto login if session
+(async function(){
+  try { const data = await authFetch('/api/auth/me'); if(data.user){ setSession(data.user); enterApp(); } } catch(e) {}
+})();
+
+let currentComp = 'BSA';
+let currentMetric = 'goals';
+let currentFilter = 'all';
+let cacheHistory = {};
+let matchesCache = {};
+
+async function apiFetch(path, ms=7000){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const r = await fetch('/api/football' + path, {
+      credentials:'same-origin',
+      signal: ctrl.signal
+    });
+    if(!r.ok) throw new Error('API ' + r.status);
+    return await r.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function toBRT(utc){
+  try {
+    return new Date(utc).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', timeZone:'America/Sao_Paulo'});
+  } catch(e){ return utc.slice(11,16); }
+}
+
+
+const FALLBACK = {
+  "BSA": [
+    {"id":554948,"utcDate":"2026-10-02T23:00:00Z","status":"TIMED","homeTeam":{"id":1776,"name":"São Paulo FC","shortName":"São Paulo"},"awayTeam":{"id":1773,"name":"Santos FC","shortName":"Santos"},"score":{"fullTime":{"home":null,"away":null}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":554940,"utcDate":"2026-10-03T21:30:00Z","status":"TIMED","homeTeam":{"id":1766,"name":"CA Mineiro","shortName":"Mineiro"},"awayTeam":{"id":1783,"name":"RB Bragantino","shortName":"Bragantino"},"score":{"fullTime":{"home":null,"away":null}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":555022,"utcDate":"2026-10-07T22:30:00Z","status":"TIMED","homeTeam":{"id":1783,"name":"RB Bragantino","shortName":"Bragantino"},"awayTeam":{"id":22032,"name":"Mirassol FC","shortName":"Mirassol"},"score":{"fullTime":{"home":null,"away":null}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":555025,"utcDate":"2026-10-07T22:30:00Z","status":"TIMED","homeTeam":{"id":1767,"name":"SC Internacional","shortName":"Internacional"},"awayTeam":{"id":1779,"name":"SC Corinthians Paulista","shortName":"Corinthians"},"score":{"fullTime":{"home":null,"away":null}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":555027,"utcDate":"2026-10-07T22:30:00Z","status":"TIMED","homeTeam":{"id":22031,"name":"Clube do Remo","shortName":"Clube do Remo"},"awayTeam":{"id":1767,"name":"Grêmio FBPA","shortName":"Grêmio"},"score":{"fullTime":{"home":null,"away":null}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":554999,"utcDate":"2026-10-08T00:00:00Z","status":"TIMED","homeTeam":{"id":1769,"name":"SE Palmeiras","shortName":"Palmeiras"},"awayTeam":{"id":1770,"name":"Botafogo FR","shortName":"Botafogo"},"score":{"fullTime":{"home":null,"away":null}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":555001,"utcDate":"2026-10-08T22:00:00Z","status":"TIMED","homeTeam":{"id":1765,"name":"Fluminense FC","shortName":"Fluminense"},"awayTeam":{"id":1777,"name":"EC Bahia","shortName":"Bahia"},"score":{"fullTime":{"home":null,"away":null}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":554748,"utcDate":"2026-01-29T00:30:00Z","status":"FINISHED","homeTeam":{"id":1776,"name":"São Paulo FC","shortName":"São Paulo"},"awayTeam":{"id":1782,"name":"CR Flamengo","shortName":"Flamengo"},"score":{"fullTime":{"home":2,"away":1}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":554745,"utcDate":"2026-01-28T22:30:00Z","status":"FINISHED","homeTeam":{"id":1765,"name":"Fluminense FC","shortName":"Fluminense"},"awayTeam":{"id":1767,"name":"Grêmio FBPA","shortName":"Grêmio"},"score":{"fullTime":{"home":2,"away":1}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":554740,"utcDate":"2026-01-28T22:00:00Z","status":"FINISHED","homeTeam":{"id":1766,"name":"CA Mineiro","shortName":"Mineiro"},"awayTeam":{"id":1769,"name":"SE Palmeiras","shortName":"Palmeiras"},"score":{"fullTime":{"home":2,"away":2}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":554742,"utcDate":"2026-01-28T23:00:00Z","status":"FINISHED","homeTeam":{"id":1772,"name":"Chapecoense AF","shortName":"Chapecoense"},"awayTeam":{"id":1773,"name":"Santos FC","shortName":"Santos"},"score":{"fullTime":{"home":4,"away":2}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}},
+    {"id":554743,"utcDate":"2026-01-28T23:00:00Z","status":"FINISHED","homeTeam":{"id":1779,"name":"SC Corinthians Paulista","shortName":"Corinthians"},"awayTeam":{"id":1777,"name":"EC Bahia","shortName":"Bahia"},"score":{"fullTime":{"home":1,"away":2}},"competition":{"name":"Campeonato Brasileiro Série A","code":"BSA"}}
+  ],
+  "PL": [
+    {"id":900001,"utcDate":"2026-10-04T14:00:00Z","status":"TIMED","homeTeam":{"id":64,"name":"Liverpool FC","shortName":"Liverpool"},"awayTeam":{"id":57,"name":"Arsenal FC","shortName":"Arsenal"},"score":{"fullTime":{"home":null,"away":null}},"competition":{"name":"Premier League","code":"PL"}},
+    {"id":900002,"utcDate":"2026-10-04T16:30:00Z","status":"TIMED","homeTeam":{"id":65,"name":"Manchester City FC","shortName":"Man City"},"awayTeam":{"id":66,"name":"Manchester United FC","shortName":"Man United"},"score":{"fullTime":{"home":null,"away":null}},"competition":{"name":"Premier League","code":"PL"}},
+    {"id":900003,"utcDate":"2026-10-05T13:00:00Z","status":"TIMED","homeTeam":{"id":61,"name":"Chelsea FC","shortName":"Chelsea"},"awayTeam":{"id":58,"name":"Aston Villa FC","shortName":"Aston Villa"},"score":{"fullTime":{"home":null,"away":null}},"competition":{"name":"Premier League","code":"PL"}}
+  ]
+};
+
+async function apiFetchTimeout(path, ms=6000){
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const r = await fetch('/api/football' + path, { credentials:'same-origin', signal: ctrl.signal });
+    clearTimeout(t);
+    if(!r.ok) throw new Error('API ' + r.status);
+    return await r.json();
+  } catch(e){
+    clearTimeout(t);
+    throw e;
+  }
+}
+
+async function loadMatches(code){
+  // Fallback imediato — não espera rede
+  if(typeof FALLBACK !== 'undefined' && FALLBACK[code] && FALLBACK[code].length){
+    matchesCache[code] = FALLBACK[code];
+    return FALLBACK[code];
+  }
+  if(matchesCache[code]) return matchesCache[code];
+  return [];
+}
+
+// Tenta atualizar da API em background (não bloqueia a tela)
+async function refreshFromAPI(code){
+  try {
+    const [sched, fin] = await Promise.all([
+      apiFetchTimeout(`/competitions/${code}/matches?status=SCHEDULED&limit=12`, 5000),
+      apiFetchTimeout(`/competitions/${code}/matches?status=FINISHED&limit=10`, 5000)
+    ]);
+    const finished = (fin.matches||[]).slice(-8).reverse();
+    const upcoming = (sched.matches||[]).slice(0,10);
+    const list = [...upcoming, ...finished];
+    if(list.length){
+      matchesCache[code] = list;
+      // re-render se ainda estiver na mesma liga
+      if(currentComp === code){
+        let html = '<div class="league-block"><div class="league-header">★ ' + code + ' · ao vivo</div>';
+        list.forEach(m => {
+          const home = m.homeTeam.shortName || m.homeTeam.name;
+          const away = m.awayTeam.shortName || m.awayTeam.name;
+          const isFin = m.status === 'FINISHED';
+          const score = isFin ? (m.score.fullTime.home + ' - ' + m.score.fullTime.away) : '-';
+          let timeLabel, statusLabel;
+          const [y,mo,da] = m.utcDate.slice(0,10).split('-');
+          if(isFin){ timeLabel = da+'/'+mo; statusLabel = 'Encerrado'; }
+          else { timeLabel = da+'/'+mo; statusLabel = toBRT(m.utcDate); }
+          html += `<div class="match-row" onclick="openMatch(${Number(m.id)}, '${String(code).replace(/'/g, "\\'")}')">
+            <div class="match-time"><div class="hour">${timeLabel}</div><div class="status">${statusLabel}</div></div>
+            <div class="match-teams"><div class="team">${home}</div><div class="team">${away}</div></div>
+            <div class="score">${score}</div></div>`;
+        });
+        html += '</div>';
+        document.getElementById('gamesList').innerHTML = html;
+      }
+    }
+  } catch(e){ console.log('refresh skip', e); }
+}
+
+async function renderGames(){
+  const list = await loadMatches(currentComp);
+  // tenta API em background sem travar
+  refreshFromAPI(currentComp);
+  if(!list.length){
+    document.getElementById('gamesList').innerHTML = '<div class="loading">Nenhum jogo encontrado nesta competição.</div>';
+    return;
+  }
+  let html = `<div class="league-block"><div class="league-header">★ ${currentComp} · dados oficiais</div>`;
+  list.forEach(m=>{
+    const home = m.homeTeam.shortName || m.homeTeam.name;
+    const away = m.awayTeam.shortName || m.awayTeam.name;
+    const isFin = m.status === 'FINISHED';
+    const score = isFin ? `${m.score.fullTime.home} - ${m.score.fullTime.away}` : '-';
+    let timeLabel, statusLabel;
+    if(isFin){
+      const [y,mo,da] = m.utcDate.slice(0,10).split('-');
+      timeLabel = da + '/' + mo;
+      statusLabel = 'Encerrado';
+    } else {
+      const [y,mo,da] = m.utcDate.slice(0,10).split('-');
+      timeLabel = da + '/' + mo;
+      statusLabel = toBRT(m.utcDate);
+    }
+    html += `<div class="match-row" onclick="openMatch(${m.id}, '${currentComp}')">
+      <div class="match-time"><div class="hour">${timeLabel}</div><div class="status">${statusLabel}</div></div>
+      <div class="match-teams">
+        <div class="team">${home}</div>
+        <div class="team">${away}</div>
+        <div class="match-meta">${m.competition?.name || currentComp}</div>
+      </div>
+      <div class="score">${score}</div>
+    </div>`;
+  });
+  html += '</div>';
+  document.getElementById('gamesList').innerHTML = html;
+}
+
+async function openMatch(id, code){
+  const list = matchesCache[code] || [];
+  const m = list.find(x => x.id === id);
+  if(!m) return;
+  const isFin = m.status === 'FINISHED';
+  const score = isFin ? `${m.score.fullTime.home} - ${m.score.fullTime.away}` : 'A jogar';
+  document.getElementById('modalTitle').textContent = `${m.homeTeam.shortName || m.homeTeam.name} x ${m.awayTeam.shortName || m.awayTeam.name}`;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="pick-card">
+      <div style="font-size:.7rem;font-weight:700;color:var(--green);text-transform:uppercase">Info do jogo</div>
+      <div class="main">${score}</div>
+      <div style="font-size:.8rem;margin-top:4px">${m.status} · ${m.utcDate.slice(0,16).replace('T',' ')} UTC</div>
+    </div>
+    <p style="font-size:.85rem;margin-bottom:6px"><b>Casa:</b> ${m.homeTeam.name}</p>
+    <p style="font-size:.85rem;margin-bottom:6px"><b>Fora:</b> ${m.awayTeam.name}</p>
+    <p style="font-size:.85rem;margin-bottom:6px"><b>Competição:</b> ${m.competition?.name || code}</p>
+    <p style="font-size:.82rem;color:var(--muted);margin-top:12px">Fonte: football-data.org · match #${m.id}</p>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+
+document.getElementById('compTabs').addEventListener('click', e => {
+  if(e.target.dataset.code){
+    currentComp = e.target.dataset.code;
+    document.querySelectorAll('.comp-tab').forEach(c => c.classList.toggle('active', c.dataset.code === currentComp));
+    renderGames();
+  }
+});
+
+async function loadHistory(teamId){
+  if(cacheHistory[teamId]) return cacheHistory[teamId];
+  document.getElementById('advTable').innerHTML = '<div class="loading">Buscando histórico oficial...</div>';
+  try {
+    const d = await apiFetch(`/teams/${teamId}/matches?status=FINISHED&limit=15`);
+    const games = (d.matches || []).map(m => {
+      const isHome = m.homeTeam.id == teamId;
+      const gf = isHome ? (m.score.fullTime.home ?? 0) : (m.score.fullTime.away ?? 0);
+      const ga = isHome ? (m.score.fullTime.away ?? 0) : (m.score.fullTime.home ?? 0);
+      return {
+        date: m.utcDate.slice(0,10),
+        opp: isHome ? (m.awayTeam.shortName || m.awayTeam.name) : (m.homeTeam.shortName || m.homeTeam.name),
+        loc: isHome ? 'H' : 'A',
+        goals: gf, goals_against: ga,
+        result: gf > ga ? 'W' : gf < ga ? 'L' : 'D',
+        competition: m.competition?.code || ''
+      };
+    }).sort((a,b) => b.date.localeCompare(a.date));
+    cacheHistory[teamId] = games;
+    return games;
+  } catch(e){
+    document.getElementById('advTable').innerHTML = '<div class="loading">Erro na API.</div>';
+    return [];
+  }
+}
+
+async function renderAdv(){
+  const teamId = document.getElementById('advTeam').value;
+  const line = parseFloat(document.getElementById('lineValue').value) || 0;
+  let games = await loadHistory(teamId);
+  if(currentFilter === 'H') games = games.filter(g => g.loc === 'H');
+  if(currentFilter === 'A') games = games.filter(g => g.loc === 'A');
+  if(!games.length){
+    document.getElementById('advTable').innerHTML = '<div class="loading">Nenhum jogo encontrado.</div>';
+    document.getElementById('lineSummary').innerHTML = '';
+    return;
+  }
+  const vals = games.map(g => currentMetric === 'result' ? (g.result === 'W' ? 1 : 0) : g[currentMetric]);
+  const over = vals.filter(v => v > line).length;
+  const under = vals.filter(v => v < line).length;
+  const avg = (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2);
+  document.getElementById('lineSummary').innerHTML = `
+    <div class="line-stat over"><div class="n">${over}</div><div class="l">Over ${line}</div></div>
+    <div class="line-stat under"><div class="n">${under}</div><div class="l">Under ${line}</div></div>
+    <div class="line-stat avg"><div class="n">${avg}</div><div class="l">Média</div></div>
+    <div class="line-stat"><div class="n">${games.length}</div><div class="l">Jogos</div></div>`;
+  document.getElementById('advTable').innerHTML = `
+    <table class="last10-table">
+      <thead><tr><th>Data</th><th>Adversário</th><th>Local</th><th>Comp</th><th style="text-align:center">Valor</th><th style="text-align:center">vs Linha</th></tr></thead>
+      <tbody>
+        ${games.map(g => {
+          const v = currentMetric === 'result' ? (g.result === 'W' ? 1 : 0) : g[currentMetric];
+          const cls = v > line ? 'over' : v < line ? 'under' : '';
+          const vs = v > line ? 'OVER' : v < line ? 'UNDER' : 'PUSH';
+          const display = currentMetric === 'result' ? g.result : v;
+          return `<tr>
+            <td style="color:var(--muted);font-size:.72rem">${g.date}</td>
+            <td style="font-weight:500">${g.opp}</td>
+            <td>${g.loc === 'H' ? '🏠' : '✈️'}</td>
+            <td style="font-size:.72rem;color:var(--muted)">${g.competition}</td>
+            <td class="val ${cls}">${display}</td>
+            <td class="val ${cls}">${vs}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    <p style="font-size:.72rem;color:var(--muted);margin-top:10px;text-align:center">Fonte: football-data.org</p>`;
+}
+
+document.getElementById('metricSelector').addEventListener('click', e => {
+  if(e.target.dataset.m){
+    currentMetric = e.target.dataset.m;
+    document.querySelectorAll('.metric-chip').forEach(c => c.classList.toggle('active', c.dataset.m === currentMetric));
+    document.getElementById('lineValue').value = ({goals:1.5,goals_against:1.5,result:0.5})[currentMetric] || 1.5;
+    renderAdv();
+  }
+});
+document.querySelector('.filter-row').addEventListener('click', e => {
+  if(e.target.dataset.f){
+    currentFilter = e.target.dataset.f;
+    document.querySelectorAll('[data-f]').forEach(c => c.classList.toggle('active', c.dataset.f === currentFilter));
+    renderAdv();
+  }
+});
+document.getElementById('advTeam').addEventListener('change', () => { cacheHistory = {}; renderAdv(); });
+document.getElementById('lineValue').addEventListener('input', renderAdv);
+
+function showMain(tab){
+  const session = getSession();
+  if(tab === 'admin' && !session?.isAdmin) return;
+  const view = document.getElementById('view-' + tab);
+  if(!view) return;
+  document.querySelectorAll('.full-view').forEach(v => v.classList.remove('active'));
+  view.classList.add('active');
+  document.querySelectorAll('#mainTabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.bottom-nav button').forEach((b,i) => {
+    const tabs = ['jogos','avancado','planos','admin'];
+    b.classList.toggle('active', tabs[i] === tab);
+  });
+  if(tab === 'avancado') renderAdv();
+  if(tab === 'jogos') renderGames();
+}
+document.getElementById('mainTabs').addEventListener('click', e => {
+  if(e.target.dataset.tab) showMain(e.target.dataset.tab);
+});
+
+async function renderAdmin(){
+  try {
+    const data = await authFetch('/api/admin/users');
+    state.subs = data.users || [];
+    const active = state.subs.filter(s => s.status === 'active');
+    const vips = active.filter(s => s.plan === 'vip').length;
+    document.getElementById('sTotal').textContent = state.subs.length;
+    document.getElementById('sVip').textContent = vips;
+    document.getElementById('sFree').textContent = active.filter(s => s.plan === 'free').length;
+    document.getElementById('sMrr').textContent = 'R$' + (vips * 49);
+    document.getElementById('adminBody').innerHTML = state.subs.map(s => `
+      <tr><td style="font-weight:600">${s.name}</td>
+      <td><span class="tag tag-${s.plan}">${s.plan.toUpperCase()}</span></td>
+      <td><span class="tag tag-${s.status==='active'?'ok':'off'}">${s.status==='active'?'Ativo':'Off'}</span></td>
+      <td><button class="act-btn" onclick="togPlan(${s.id})">${s.plan==='free'?'↑VIP':'↓Free'}</button>
+      <button class="act-btn" onclick="togStat(${s.id})">${s.status==='active'?'Cancel':'On'}</button></td></tr>`).join('');
+  } catch(e) { console.log('admin skip', e); }
+}
+
+async function togPlan(id){
+  try { await authFetch('/api/admin/plan/' + id, {method:'POST', body:'{}'}); await renderAdmin(); }
+  catch(e) { alert(e.message); }
+}
+async function togStat(id){
+  try { await authFetch('/api/admin/status/' + id, {method:'POST', body:'{}'}); await renderAdmin(); }
+  catch(e) { alert(e.message); }
+}
+document.getElementById('btnSimFree').addEventListener('click', async () => {
+  const s = getSession(); if(!s) return;
+  try { await authFetch('/api/admin/plan/' + s.id, {method:'POST', body:'{}'});
+    const me = await authFetch('/api/auth/me'); setSession(me.user); enterApp();
+  } catch(e) { alert(e.message); }
+});
+</script>
+</body>
+</html>
